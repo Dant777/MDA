@@ -1,10 +1,10 @@
-﻿using System.ComponentModel;
-using System.Text;
+﻿using System.Text;
+using MDA.Messenger.RabbitMQ;
 using Microsoft.Extensions.Hosting;
 
-namespace MDA.Messenger.RabbitMQ
+namespace MDA.Restaraunt.Notification
 {
-    public class Worker:BackgroundService
+    public class Worker : BackgroundService
     {
         private readonly Consumer _consumer;
 
