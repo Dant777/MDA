@@ -2,6 +2,9 @@
 {
     internal sealed class Table
     {
+        static Timer timer;
+        long interval = 1000 * 10;
+
         public Table(int id)
         {
             Id=id;
@@ -20,7 +23,28 @@
                 return false;
             }
             State = state;
+            StartTimerAsync();
             return true;
+        }
+
+
+        public void StartTimerAsync()
+        {
+
+            Task.Run(async () =>
+            {
+                timer = new Timer(new TimerCallback(RemoveBook), null, interval, 0);
+            });
+        }
+
+        private void RemoveBook(object obj)
+        {
+            if (State == State.Booked)
+            {
+                State = State.Free;
+                Messenger.PrintAnswer($"Время бронирования прошло, бронь снята со столика {Id}");
+            }
+
         }
     }
 }

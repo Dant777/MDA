@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MDA.Entities
+﻿namespace MDA.Entities
 {
     internal static class Messenger
     {
@@ -29,7 +23,7 @@ namespace MDA.Entities
 
         public static void PrintMsgSleep(string txt)
         {
-            
+
             Console.WriteLine(txt + "\n");
             Thread.Sleep(5000);
 
