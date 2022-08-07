@@ -8,9 +8,8 @@ namespace MDA.Messenger.RabbitMQ
     {
         private readonly ConnectionFactory _connectionFactory;
         private readonly IModel _channel;
-        private readonly string _queue;
 
-        public Consumer(string queue)
+        public Consumer()
         {
             _connectionFactory = new ConnectionFactory
             {
@@ -30,14 +29,20 @@ namespace MDA.Messenger.RabbitMQ
                 }
             };
             _channel = _connectionFactory.CreateConnection().CreateModel();
-            _queue = queue;
+
         }
 
         public void Receive(EventHandler<BasicDeliverEventArgs> receiveCallBack)
         {
+            _channel.ExchangeDeclare(exchange: "rest", type: ExchangeType.Fanout);
+
+            var queueName = _channel.QueueDeclare().QueueName;
+            _channel.QueueBind(queue: queueName,
+                exchange: "rest",
+                routingKey: "");
             var consumer = new EventingBasicConsumer(_channel);
             consumer.Received += receiveCallBack;
-            _channel.BasicConsume(_queue, true, consumer);
+            _channel.BasicConsume(queueName, true, consumer);
         }
     }
 }

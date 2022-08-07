@@ -10,7 +10,7 @@ namespace MDA.Restaraunt.Notification
 
         public Worker()
         {
-            _consumer = new Consumer("RabbitTestQueue");
+            _consumer = new Consumer();
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -19,7 +19,9 @@ namespace MDA.Restaraunt.Notification
             {
                 var body = args.Body.ToArray();
                 var msg = Encoding.UTF8.GetString(body);
+                Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine(msg);
+                Console.ResetColor();
             });
         }
     }

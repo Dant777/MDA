@@ -8,7 +8,7 @@ namespace MDA.Restaraunt.Booking.Entities
         private readonly Producer _producer;
         public Restaurant()
         {
-            _producer = new Producer("RabbitTestQueue");
+            _producer = new Producer();
             for (ushort i = 1; i < 10; i++)
             {
                 _tables.Add(new Table(i) { Producer = _producer });
@@ -75,7 +75,7 @@ namespace MDA.Restaraunt.Booking.Entities
 
         public void PrintTablesInfo()
         {
-            string msg = "Информация о столиках:";
+            string msg = "Информация о столиках:\n";
 
             foreach (var table in _tables)
             {

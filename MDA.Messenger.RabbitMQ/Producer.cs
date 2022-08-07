@@ -8,10 +8,9 @@ namespace MDA.Messenger.RabbitMQ
     public sealed class Producer
     {
         private readonly  ConnectionFactory _connectionFactory;
-        private readonly string _queue;
-        public Producer(string queue)
+
+        public Producer()
         {
-            _queue = queue;
             _connectionFactory = new ConnectionFactory
             {
                 HostName = "rattlesnake-01.rmq.cloudamqp.com",
@@ -43,11 +42,12 @@ namespace MDA.Messenger.RabbitMQ
                 {
                     using (var channel = connection.CreateModel())
                     {
-                        channel.BasicPublish(exchange:"", routingKey: _queue, body:msg);
+                        channel.ExchangeDeclare("rest", ExchangeType.Fanout);
+                        channel.BasicPublish(exchange: "rest", routingKey: "", body:msg);
                         channel.Close();
                     }
 
-                    Console.WriteLine($"Success {_queue}");
+                    Console.WriteLine($"The message has been sent!");
                     connection.Close();
                 }
             }

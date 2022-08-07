@@ -45,7 +45,7 @@ namespace MDA.Restaraunt.Booking.Entities
             if (State == State.Booked)
             {
                 State = State.Free;
-                string msg = $"Время бронирования прошло, бронь снята со столика {Id}";
+                string msg = $"УВЕДОМЛЕНИЕ: Время бронирования прошло, бронь снята со столика {Id}";
                 if (Producer == null)
                 {
                     Messenger.PrintAnswer(msg);
