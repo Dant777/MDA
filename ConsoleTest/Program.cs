@@ -13,10 +13,3 @@ Console.WriteLine(msg.Length);
 //CreateHostBuilder(args).Build().Run();
 
 
-
-static IHostBuilder CreateHostBuilder(string[] args) =>
-    Host.CreateDefaultBuilder(args).
-    ConfigureServices((hostContext, services) =>
-    {
-        services.AddHostedService<Worker>();
-    });

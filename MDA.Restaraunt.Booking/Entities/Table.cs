@@ -5,7 +5,7 @@ namespace MDA.Restaraunt.Booking.Entities
     public sealed class Table
     {
         private static Timer timer;
-        private const long interval = 1000 * 20;
+        private const long interval = 1000 * 10;
         private Producer _producer;
         public Table(int id)
         {

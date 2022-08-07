@@ -1,10 +1,12 @@
-﻿//CreateHostBuilder(args).Build().Run();
-
-
+﻿
 using MDA.Restaraunt.Notification;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
-static IHostBuilder CreateHostBuilder(string[] args) =>
-    Host.CreateDefaultBuilder(args).
+
+CreateHostBuilder(args).Build().Run();
+
+static IHostBuilder CreateHostBuilder(string[] args) => Host.CreateDefaultBuilder(args).
         ConfigureServices((hostContext, services) =>
         {
             services.AddHostedService<Worker>();

@@ -8,12 +8,12 @@ namespace MDA.Restaraunt.Booking.Entities
         private readonly Producer _producer;
         public Restaurant()
         {
+            _producer = new Producer("RabbitTestQueue");
             for (ushort i = 1; i < 10; i++)
             {
                 _tables.Add(new Table(i) { Producer = _producer });
             }
 
-            _producer = new Producer("RabbitTestQueue");
         }
 
         public void BookFreeTable(int countOfPersons)
@@ -25,7 +25,7 @@ namespace MDA.Restaraunt.Booking.Entities
             
             table?.SetState(State.Booked);
 
-            _producer.SendToQueue(table is null ? 
+            Messenger.PrintAnswer(table is null ? 
                 "Столов нет" :
                 $"УВЕДОМЛЕНИЕ: Готово! Ваш стол номер - {table.Id}");
         }
@@ -53,7 +53,7 @@ namespace MDA.Restaraunt.Booking.Entities
             
             table?.SetState(State.Free);
 
-            _producer.SendToQueue(table is null ?
+            Messenger.PrintAnswer(table is null ?
                 "Стол бы не занят" :
                 $"УВЕДОМЛЕНИЕ: Готово! Ваша бронь снята со стола - {table.Id}");
         }
