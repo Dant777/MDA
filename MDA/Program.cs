@@ -6,30 +6,62 @@ Console.OutputEncoding = System.Text.Encoding.UTF8;
 var rest = new Restaurant();
 while (true)
 {
-    Console.WriteLine("Привет! Забронировать столик!" +
-                      "\n1 - мы уведомим Вас по смс (асинхронно)" +
-                      "\n2 - подождите на линии, мы Вас оповестим (синхронно)");
+    Messenger.PrintTxt("Привет! Забронировать столик/отменить бронь!" +
+                      "\n\t1 - мы уведомим Вас по смс (асинхронно)" +
+                      "\n\t2 - подождите на линии, мы Вас оповестим (синхронно)" +
+                      "\n\t3 - мы уведомим Вас по смс об отмене брони (асинхронно)" +
+                      "\n\t4 - подождите на линии, мы Вас оповестим об отмене брони (синхронно)");
 
-    if (!int.TryParse(Console.ReadLine(), out var choice) && choice is not (1 or 2))
-    {
-        Console.WriteLine("Введите, пожалуйста 1 или 2");
-        continue;
-    }
 
+    string removeInput = String.Empty;
+    int tableNum;
+    string userInput = Console.ReadLine();
     var stopWatch = new Stopwatch();
     stopWatch.Start();
-    if (choice == 1)
+    switch (IsCorrectUserInput(userInput))
     {
-        rest.BookFreeTableAsync(1);
-    }
-    else
-    {
-        rest.BookFreeTable(1);
+        case -1:
+            continue;
+        case 1:
+            rest.BookFreeTableAsync(1);
+            break;
+        case 2:
+            rest.BookFreeTable(1);
+            break;
+        case 3:
+            Messenger.PrintTxt("Какой столик отменить?(Выберите номер)");
+            removeInput = Console.ReadLine();
+            tableNum = IsCorrectUserInput(removeInput);
+            if (tableNum == -1) continue;
+            rest.RemoveBookFreeTableAsync(tableNum);
+            break;
+        case 4:
+            Messenger.PrintTxt("Какой столик отменить?(Выберите номер)");
+            removeInput = Console.ReadLine();
+            tableNum = IsCorrectUserInput(removeInput);
+            if(tableNum == -1) continue;
+            rest.RemoveBookFreeTable(tableNum);
+            break;
+        default:
+            Messenger.PrintError("ОШИБКА: Введите, пожалуйста 1, 2, 3, 4");
+            continue;
     }
 
-    Console.WriteLine("Спасибо за Ваше обращение!");
+
+    Messenger.PrintAnswer("Спасибо за Ваше обращение!");
     stopWatch.Start();
     var ts = stopWatch.Elapsed;
     Console.WriteLine($"{ts.Seconds:00}:{ts.Milliseconds:00}");
 }
 
+static int IsCorrectUserInput(string usetInput)
+{
+    bool isNum = int.TryParse(usetInput, out var choice);
+    if (!isNum)
+    {
+        Messenger.PrintError("ОШИБКА: Введите, пожалуйста цифры");
+        return -1;
+    }
+
+    return choice;
+}

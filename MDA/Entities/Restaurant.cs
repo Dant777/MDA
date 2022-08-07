@@ -14,29 +14,59 @@
 
         public void BookFreeTable(int countOfPersons)
         {
-            Console.WriteLine("Добрый день! Подождите я подберу столик и подтвержу бронь, оставайтесь на линии");
+            Messenger.PrintMsgSleep("Добрый день! Подождите я подберу столик и подтвержу бронь, оставайтесь на линии");
+            
             var table = _tables.FirstOrDefault(t => t.SeatsCount > countOfPersons
                                                     && t.State == State.Free);
-            Thread.Sleep(5000);
+            
             table?.SetState(State.Booked);
 
-            Console.WriteLine(table is null ? 
+            Messenger.PrintAnswer(table is null ? 
                 "Столов нет" :
-                $"Готово! Ваш стол номер {table.Id}");
+                $"УВЕДОМЛЕНИЕ: Готово! Ваш стол номер - {table.Id}");
         }
 
         public void BookFreeTableAsync(int countOfPersons)
         {
-            Console.WriteLine("Добрый день! Подождите я подберу столик и подтвержу бронь, оставайтесь на линии");
+            
             Task.Run(async () =>
             {
-                await Task.Delay(5000);
+                await Messenger.PrintMsgSleepAsync("Добрый день! Подождите я подберу столик и подтвержу бронь, оставайтесь на линии");
                 var table = _tables.FirstOrDefault(t => t.SeatsCount > countOfPersons
                                                         && t.State == State.Free);
                 table?.SetState(State.Booked);
-                Console.WriteLine(table is null ? "Столов нет" : $"УВЕДОМЛЕНИЕ: Готово! Ваш стол номер {table.Id}");
+                Messenger.PrintAnswer(table is null ? "Столов нет" : $"УВЕДОМЛЕНИЕ: Готово! Ваш стол номер {table.Id}");
             });
             
+        }
+
+        public void RemoveBookFreeTable(int tableNumber)
+        {
+            Messenger.PrintMsgSleep("Добрый день! Подождите я сниму бронь со стола, оставайтесь на линии");
+            
+            var table = _tables.FirstOrDefault(t => t.Id == tableNumber 
+                                                    && t.State == State.Booked);
+            
+            table?.SetState(State.Free);
+
+            Messenger.PrintAnswer(table is null ?
+                "Стол бы не занят" :
+                $"УВЕДОМЛЕНИЕ: Готово! Ваша бронь снята со стола - {table.Id}");
+        }
+
+        public void RemoveBookFreeTableAsync(int tableNumber)
+        {
+            
+            Task.Run(async () =>
+            {
+                await Messenger.PrintMsgSleepAsync("Добрый день! Подождите я сниму бронь со стола, оставайтесь на линии");
+                var table = _tables.FirstOrDefault(t => t.Id == tableNumber
+                                                        && t.State == State.Booked);
+                table?.SetState(State.Free);
+                Messenger.PrintAnswer(table is null ?
+                    "Стол был не занят" :
+                    $"УВЕДОМЛЕНИЕ: Готово! Ваша бронь снята со стола - {table.Id}");
+            });
         }
     }
 }
