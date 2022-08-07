@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MDA", "MDA\MDA.csproj", "{21168248-75DB-4988-B60B-37E96B783A4B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MDA", "MDA\MDA.csproj", "{21168248-75DB-4988-B60B-37E96B783A4B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MDA.Messenger.RabbitMQ", "MDA.Messenger.RabbitMQ\MDA.Messenger.RabbitMQ.csproj", "{63619FF8-C86E-4EFF-8E5A-CB252F539A8D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{21168248-75DB-4988-B60B-37E96B783A4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{21168248-75DB-4988-B60B-37E96B783A4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{21168248-75DB-4988-B60B-37E96B783A4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{63619FF8-C86E-4EFF-8E5A-CB252F539A8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{63619FF8-C86E-4EFF-8E5A-CB252F539A8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{63619FF8-C86E-4EFF-8E5A-CB252F539A8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{63619FF8-C86E-4EFF-8E5A-CB252F539A8D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
