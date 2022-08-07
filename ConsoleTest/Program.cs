@@ -1,11 +1,16 @@
-﻿using MDA.Messenger.RabbitMQ;
+﻿using System.Text;
+using MDA.Messenger.RabbitMQ;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 //var producer = new Producer();
 //producer.SendToQueue(Encoding.UTF8.GetBytes("test"), "RabbitTestQueue");
 
-CreateHostBuilder(args).Build().Run();
+var msg = Encoding.UTF8.GetBytes("message");
+Console.WriteLine(msg.Length);
+msg = Encoding.UTF8.GetBytes("");
+Console.WriteLine(msg.Length);
+//CreateHostBuilder(args).Build().Run();
 
 
 

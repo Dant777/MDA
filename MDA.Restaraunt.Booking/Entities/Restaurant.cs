@@ -1,15 +1,19 @@
-﻿namespace MDA.Restaraunt.Booking.Entities
+﻿using MDA.Messenger.RabbitMQ;
+
+namespace MDA.Restaraunt.Booking.Entities
 {
-    internal sealed class Restaurant
+    public sealed class Restaurant
     {
         private readonly List<Table> _tables = new List<Table>();
-
+        private readonly Producer _producer;
         public Restaurant()
         {
             for (ushort i = 1; i < 10; i++)
             {
-                _tables.Add(new Table(i));
+                _tables.Add(new Table(i) { Producer = _producer });
             }
+
+            _producer = new Producer("RabbitTestQueue");
         }
 
         public void BookFreeTable(int countOfPersons)
@@ -21,7 +25,7 @@
             
             table?.SetState(State.Booked);
 
-            Messenger.PrintAnswer(table is null ? 
+            _producer.SendToQueue(table is null ? 
                 "Столов нет" :
                 $"УВЕДОМЛЕНИЕ: Готово! Ваш стол номер - {table.Id}");
         }
@@ -31,16 +35,16 @@
             
             Task.Run(async () =>
             {
-                await Messenger.PrintMsgSleepAsync("Добрый день! Подождите я подберу столик и подтвержу бронь, оставайтесь на линии");
+                await Messenger.PrintMsgSleepAsync("Добрый день! Подождите я подберу столик и подтвержу бронь, Вам придет уведомление");
                 var table = _tables.FirstOrDefault(t => t.SeatsCount > countOfPersons
                                                         && t.State == State.Free);
                 table?.SetState(State.Booked);
-                Messenger.PrintAnswer(table is null ? "Столов нет" : $"УВЕДОМЛЕНИЕ: Готово! Ваш стол номер {table.Id}");
+                _producer.SendToQueue(table is null ? "Столов нет" : $"УВЕДОМЛЕНИЕ: Готово! Ваш стол номер {table.Id}");
             });
             
         }
 
-        public void RemoveBookFreeTable(int tableNumber)
+        public void RemoveBookTable(int tableNumber)
         {
             Messenger.PrintMsgSleep("Добрый день! Подождите я сниму бронь со стола, оставайтесь на линии");
             
@@ -49,21 +53,21 @@
             
             table?.SetState(State.Free);
 
-            Messenger.PrintAnswer(table is null ?
+            _producer.SendToQueue(table is null ?
                 "Стол бы не занят" :
                 $"УВЕДОМЛЕНИЕ: Готово! Ваша бронь снята со стола - {table.Id}");
         }
 
-        public void RemoveBookFreeTableAsync(int tableNumber)
+        public void RemoveBookTableAsync(int tableNumber)
         {
             
             Task.Run(async () =>
             {
-                await Messenger.PrintMsgSleepAsync("Добрый день! Подождите я сниму бронь со стола, оставайтесь на линии");
+                await Messenger.PrintMsgSleepAsync("Добрый день! Подождите я сниму бронь со стола, Вам придет уведомление");
                 var table = _tables.FirstOrDefault(t => t.Id == tableNumber
                                                         && t.State == State.Booked);
                 table?.SetState(State.Free);
-                Messenger.PrintAnswer(table is null ?
+                _producer.SendToQueue(table is null ?
                     "Стол был не занят" :
                     $"УВЕДОМЛЕНИЕ: Готово! Ваша бронь снята со стола - {table.Id}");
             });
@@ -71,12 +75,13 @@
 
         public void PrintTablesInfo()
         {
-            Messenger.PrintInfo("Информация о столиках:");
+            string msg = "Информация о столиках:";
+
             foreach (var table in _tables)
             {
-                Messenger.PrintInfo($"\t-Table #{table.Id} - {table.State}");
+                msg += $"\t-Table #{table.Id} - {table.State}\n";
             }
-            Messenger.PrintTxt("");
+            _producer.SendToQueue(msg);
         }
 
     }

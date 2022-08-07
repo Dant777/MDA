@@ -1,6 +1,6 @@
 ﻿namespace MDA.Restaraunt.Booking.Entities
 {
-    internal static class Messenger
+    public static class Messenger
     {
         public static void PrintTxt(string txt)
         {

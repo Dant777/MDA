@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
-using MDA.Entities;
+using MDA.Restaraunt.Booking.Entities;
+
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
@@ -34,14 +35,14 @@ while (true)
             removeInput = Console.ReadLine();
             tableNum = IsCorrectUserInput(removeInput);
             if (tableNum == -1) continue;
-            rest.RemoveBookFreeTableAsync(tableNum);
+            rest.RemoveBookTableAsync(tableNum);
             break;
         case 4:
             Messenger.PrintTxt("Какой столик отменить?(Выберите номер)");
             removeInput = Console.ReadLine();
             tableNum = IsCorrectUserInput(removeInput);
             if(tableNum == -1) continue;
-            rest.RemoveBookFreeTable(tableNum);
+            rest.RemoveBookTable(tableNum);
             break;
         case 5:
             rest.PrintTablesInfo();

@@ -1,10 +1,12 @@
-﻿namespace MDA.Restaraunt.Booking.Entities
-{
-    internal sealed class Table
-    {
-        static Timer timer;
-        long interval = 1000 * 20;
+﻿using MDA.Messenger.RabbitMQ;
 
+namespace MDA.Restaraunt.Booking.Entities
+{
+    public sealed class Table
+    {
+        private static Timer timer;
+        private const long interval = 1000 * 20;
+        private Producer _producer;
         public Table(int id)
         {
             Id=id;
@@ -15,6 +17,7 @@
         public State State { get; private set; }
         public int SeatsCount { get; } 
         public int Id { get; }
+        public Producer Producer { get => _producer; set => _producer = value; }
 
         public bool SetState(State state)
         {
@@ -42,7 +45,16 @@
             if (State == State.Booked)
             {
                 State = State.Free;
-                Messenger.PrintAnswer($"Время бронирования прошло, бронь снята со столика {Id}");
+                string msg = $"Время бронирования прошло, бронь снята со столика {Id}";
+                if (Producer == null)
+                {
+                    Messenger.PrintAnswer(msg);
+                }
+                else
+                {
+                    _producer.SendToQueue(msg);
+                }
+                
             }
 
         }
