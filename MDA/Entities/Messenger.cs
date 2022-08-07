@@ -20,6 +20,12 @@
             Console.WriteLine(txt + "\n");
             Console.ResetColor();
         }
+        public static void PrintInfo(string txt)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine(txt);
+            Console.ResetColor();
+        }
 
         public static void PrintMsgSleep(string txt)
         {

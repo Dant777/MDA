@@ -3,7 +3,7 @@
     internal sealed class Table
     {
         static Timer timer;
-        long interval = 1000 * 10;
+        long interval = 1000 * 20;
 
         public Table(int id)
         {

@@ -68,5 +68,16 @@
                     $"УВЕДОМЛЕНИЕ: Готово! Ваша бронь снята со стола - {table.Id}");
             });
         }
+
+        public void PrintTablesInfo()
+        {
+            Messenger.PrintInfo("Информация о столиках:");
+            foreach (var table in _tables)
+            {
+                Messenger.PrintInfo($"\t-Table #{table.Id} - {table.State}");
+            }
+            Messenger.PrintTxt("");
+        }
+
     }
 }

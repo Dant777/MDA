@@ -4,7 +4,6 @@ using MDA.Entities;
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
 var rest = new Restaurant();
-var timer = new BookTimer();
 while (true)
 {
     Messenger.PrintTxt("Привет! Забронировать столик/отменить бронь!" +
@@ -12,7 +11,7 @@ while (true)
                       "\n\t2 - подождите на линии, мы Вас оповестим (синхронно)" +
                       "\n\t3 - мы уведомим Вас по смс об отмене брони (асинхронно)" +
                       "\n\t4 - подождите на линии, мы Вас оповестим об отмене брони (синхронно)" +
-                      "\n\t5 - Timer");
+                      "\n\t5 - Иноформация о столиках");
 
 
     string removeInput = String.Empty;
@@ -45,8 +44,7 @@ while (true)
             rest.RemoveBookFreeTable(tableNum);
             break;
         case 5:
-            Console.WriteLine(DateTime.Now);
-            timer.InitAsync();
+            rest.PrintTablesInfo();
             break;
         default:
             Messenger.PrintError("ОШИБКА: Введите, пожалуйста 1, 2, 3, 4");
