@@ -5,11 +5,13 @@ VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MDA", "MDA\MDA.csproj", "{21168248-75DB-4988-B60B-37E96B783A4B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MDA.Messenger.RabbitMQ", "MDA.Messenger.RabbitMQ\MDA.Messenger.RabbitMQ.csproj", "{63619FF8-C86E-4EFF-8E5A-CB252F539A8D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MDA.Restaraunt.Booking", "MDA.Restaraunt.Booking\MDA.Restaraunt.Booking.csproj", "{67CB121A-DC6B-462C-807A-861980ADA796}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MDA.Restaraunt.Booking", "MDA.Restaraunt.Booking\MDA.Restaraunt.Booking.csproj", "{67CB121A-DC6B-462C-807A-861980ADA796}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MDA.Restaraunt.Notification", "MDA.Restaraunt.Notification\MDA.Restaraunt.Notification.csproj", "{5AA46722-592B-4E6F-83BC-3F66C82D2C59}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MDA.Restaraunt.Notification", "MDA.Restaraunt.Notification\MDA.Restaraunt.Notification.csproj", "{5AA46722-592B-4E6F-83BC-3F66C82D2C59}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MDA.Restaraunt.Messages", "MDA.Restaraunt.Messages\MDA.Restaraunt.Messages.csproj", "{D5526EC0-2E38-4BE4-9459-907836DCAFA0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MDA.Restaraunt.Kitchen", "MDA.Restaraunt.Kitchen\MDA.Restaraunt.Kitchen.csproj", "{2267A195-DFBF-448C-8B6B-0B5CB5C9668B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +23,6 @@ Global
 		{21168248-75DB-4988-B60B-37E96B783A4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{21168248-75DB-4988-B60B-37E96B783A4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{21168248-75DB-4988-B60B-37E96B783A4B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{63619FF8-C86E-4EFF-8E5A-CB252F539A8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{63619FF8-C86E-4EFF-8E5A-CB252F539A8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{63619FF8-C86E-4EFF-8E5A-CB252F539A8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{63619FF8-C86E-4EFF-8E5A-CB252F539A8D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{67CB121A-DC6B-462C-807A-861980ADA796}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{67CB121A-DC6B-462C-807A-861980ADA796}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67CB121A-DC6B-462C-807A-861980ADA796}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -33,6 +31,14 @@ Global
 		{5AA46722-592B-4E6F-83BC-3F66C82D2C59}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5AA46722-592B-4E6F-83BC-3F66C82D2C59}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5AA46722-592B-4E6F-83BC-3F66C82D2C59}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5526EC0-2E38-4BE4-9459-907836DCAFA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5526EC0-2E38-4BE4-9459-907836DCAFA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5526EC0-2E38-4BE4-9459-907836DCAFA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5526EC0-2E38-4BE4-9459-907836DCAFA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2267A195-DFBF-448C-8B6B-0B5CB5C9668B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2267A195-DFBF-448C-8B6B-0B5CB5C9668B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2267A195-DFBF-448C-8B6B-0B5CB5C9668B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2267A195-DFBF-448C-8B6B-0B5CB5C9668B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

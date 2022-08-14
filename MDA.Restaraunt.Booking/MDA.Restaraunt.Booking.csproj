@@ -7,8 +7,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\MDA.Messenger.RabbitMQ\MDA.Messenger.RabbitMQ.csproj" />
-  </ItemGroup>
-
 </Project>
