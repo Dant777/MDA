@@ -2,6 +2,7 @@
 {
     public static class Messenger
     {
+
         public static void PrintTxt(string txt)
         {
             Console.WriteLine(txt + "\n");
