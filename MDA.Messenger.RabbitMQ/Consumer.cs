@@ -32,6 +32,10 @@ namespace MDA.Messenger.RabbitMQ
 
         }
 
+        /// <summary>
+        /// Получение сообщения
+        /// </summary>
+        /// <param name="receiveCallBack">Объект сообщения</param>
         public void Receive(EventHandler<BasicDeliverEventArgs> receiveCallBack)
         {
             _channel.ExchangeDeclare(exchange: "rest", type: ExchangeType.Fanout);

@@ -12,7 +12,7 @@ while (true)
                       "\n\t2 - подождите на линии, мы Вас оповестим (синхронно)" +
                       "\n\t3 - мы уведомим Вас по смс об отмене брони (асинхронно)" +
                       "\n\t4 - подождите на линии, мы Вас оповестим об отмене брони (синхронно)" +
-                      "\n\t5 - Иноформация о столиках");
+                      "\n\t5 - Иноформация о столиках", MsgColor.Normal);
 
 
     string removeInput = String.Empty;
@@ -31,14 +31,14 @@ while (true)
             rest.BookFreeTable(1);
             break;
         case 3:
-            Messenger.PrintTxt("Какой столик отменить?(Выберите номер)");
+            Messenger.PrintTxt("Какой столик отменить?(Выберите номер)", MsgColor.Normal);
             removeInput = Console.ReadLine();
             tableNum = IsCorrectUserInput(removeInput);
             if (tableNum == -1) continue;
             rest.RemoveBookTableAsync(tableNum);
             break;
         case 4:
-            Messenger.PrintTxt("Какой столик отменить?(Выберите номер)");
+            Messenger.PrintTxt("Какой столик отменить?(Выберите номер)", MsgColor.Normal);
             removeInput = Console.ReadLine();
             tableNum = IsCorrectUserInput(removeInput);
             if(tableNum == -1) continue;
@@ -48,12 +48,12 @@ while (true)
             rest.PrintTablesInfo();
             break;
         default:
-            Messenger.PrintError("ОШИБКА: Введите, пожалуйста 1, 2, 3, 4");
+            Messenger.PrintTxt("ОШИБКА: Введите, пожалуйста 1, 2, 3, 4", MsgColor.Error);
             continue;
     }
 
 
-    Messenger.PrintAnswer("Спасибо за Ваше обращение!");
+    Messenger.PrintTxt("Спасибо за Ваше обращение!", MsgColor.Answer);
     stopWatch.Start();
     var ts = stopWatch.Elapsed;
     Console.WriteLine($"{ts.Seconds:00}:{ts.Milliseconds:00}");
@@ -64,7 +64,7 @@ static int IsCorrectUserInput(string usetInput)
     bool isNum = int.TryParse(usetInput, out var choice);
     if (!isNum)
     {
-        Messenger.PrintError("ОШИБКА: Введите, пожалуйста цифры");
+        Messenger.PrintTxt("ОШИБКА: Введите, пожалуйста цифры", MsgColor.Error);
         return -1;
     }
 

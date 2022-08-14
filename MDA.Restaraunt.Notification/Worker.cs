@@ -4,6 +4,9 @@ using Microsoft.Extensions.Hosting;
 
 namespace MDA.Restaraunt.Notification
 {
+    /// <summary>
+    /// Класс слушителя очереди сообщений
+    /// </summary>
     public class Worker : BackgroundService
     {
         private readonly Consumer _consumer;

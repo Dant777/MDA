@@ -2,6 +2,9 @@
 
 namespace MDA.Restaraunt.Booking.Entities
 {
+    /// <summary>
+    /// Класс столика
+    /// </summary>
     public sealed class Table
     {
         private static Timer timer;
@@ -14,11 +17,31 @@ namespace MDA.Restaraunt.Booking.Entities
             SeatsCount = Random.Shared.Next(2, 5);
         }
 
+        /// <summary>
+        /// Текущие состояние столика
+        /// </summary>
         public State State { get; private set; }
+
+        /// <summary>
+        /// Кол-во посадочных мест за столик
+        /// </summary>
         public int SeatsCount { get; } 
+
+        /// <summary>
+        /// Id столика
+        /// </summary>
         public int Id { get; }
+
+        /// <summary>
+        /// Оправщик сообщений
+        /// </summary>
         public Producer Producer { get => _producer; set => _producer = value; }
 
+        /// <summary>
+        /// Задание состояния столика
+        /// </summary>
+        /// <param name="state">Состояние столика</param>
+        /// <returns>true - состояние изменено</returns>
         public bool SetState(State state)
         {
             if (state == State)
@@ -31,7 +54,7 @@ namespace MDA.Restaraunt.Booking.Entities
         }
 
 
-        public void StartTimerAsync()
+        private void StartTimerAsync()
         {
 
             Task.Run(async () =>
@@ -48,7 +71,7 @@ namespace MDA.Restaraunt.Booking.Entities
                 string msg = $"УВЕДОМЛЕНИЕ: Время бронирования прошло, бронь снята со столика {Id}";
                 if (Producer == null)
                 {
-                    Messenger.PrintAnswer(msg);
+                    Messenger.PrintTxt(msg, MsgColor.Answer);
                 }
                 else
                 {

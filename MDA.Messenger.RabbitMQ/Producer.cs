@@ -30,6 +30,10 @@ namespace MDA.Messenger.RabbitMQ
             };
         }
 
+        /// <summary>
+        /// Отправка сообщение в очередь
+        /// </summary>
+        /// <param name="message">Текст сообщения</param>
         public void SendToQueue(string message)
         {
 
