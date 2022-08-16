@@ -1,4 +1,4 @@
-﻿namespace MDA.Restaraunt.Booking.Entities;
+﻿namespace MDA.Restaraunt.Messages;
 /// <summary>
 /// Цветовое отображение сообщений
 /// </summary>

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MDA.Restaraunt.Messages
+﻿namespace MDA.Restaraunt.Messages
 {
     public interface ITableBooked
     {
@@ -15,20 +9,24 @@ namespace MDA.Restaraunt.Messages
         public Dish? PreOrder { get; }
 
         public bool Success { get; }
+        public UserChoose UserChoose { get; }
+
     }
     public class TableBooked : ITableBooked
     {
-        public TableBooked(Guid orderId, Guid clientId, bool success, Dish? preOrder = null)
+        public TableBooked(Guid orderId, Guid clientId, bool success, UserChoose userChoose, Dish? preOrder = null)
         {
             OrderId = orderId;
             ClientId = clientId;
             Success = success;
             PreOrder = preOrder;
+            UserChoose = userChoose;
         }
 
         public Guid OrderId { get; }
         public Guid ClientId { get; }
         public Dish? PreOrder { get; }
         public bool Success { get; }
+        public UserChoose UserChoose { get; }
     }
 }

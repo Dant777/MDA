@@ -1,4 +1,4 @@
-﻿using MDA.Messenger.RabbitMQ;
+﻿using MDA.Restaraunt.Messages;
 
 namespace MDA.Restaraunt.Booking.Entities
 {
@@ -9,10 +9,10 @@ namespace MDA.Restaraunt.Booking.Entities
     {
         private static Timer timer;
         private const long interval = 1000 * 10;
-        private Producer _producer;
+
         public Table(int id)
         {
-            Id=id;
+            Id = id;
             State = State.Free;
             SeatsCount = Random.Shared.Next(2, 5);
         }
@@ -25,17 +25,12 @@ namespace MDA.Restaraunt.Booking.Entities
         /// <summary>
         /// Кол-во посадочных мест за столик
         /// </summary>
-        public int SeatsCount { get; } 
+        public int SeatsCount { get; }
 
         /// <summary>
         /// Id столика
         /// </summary>
         public int Id { get; }
-
-        /// <summary>
-        /// Оправщик сообщений
-        /// </summary>
-        public Producer Producer { get => _producer; set => _producer = value; }
 
         /// <summary>
         /// Задание состояния столика
@@ -49,7 +44,7 @@ namespace MDA.Restaraunt.Booking.Entities
                 return false;
             }
             State = state;
-            StartTimerAsync();
+            //StartTimerAsync();
             return true;
         }
 
@@ -69,15 +64,17 @@ namespace MDA.Restaraunt.Booking.Entities
             {
                 State = State.Free;
                 string msg = $"УВЕДОМЛЕНИЕ: Время бронирования прошло, бронь снята со столика {Id}";
-                if (Producer == null)
-                {
-                    Messenger.PrintTxt(msg, MsgColor.Answer);
-                }
-                else
-                {
-                    _producer.SendToQueue(msg);
-                }
-                
+                //if (Producer == null)
+                //{
+                //    Messenger.PrintTxt(msg, MsgColor.Answer);
+                //}
+                //else
+                //{
+                //    _producer.SendToQueue(msg);
+                //}
+
+                Messenger.PrintTxt(msg, MsgColor.Answer);
+
             }
 
         }

@@ -1,5 +1,7 @@
 ﻿using System.Security.Authentication;
 using MassTransit;
+using MDA.Restaraunt.Kitchen;
+using MDA.Restaraunt.Kitchen.Consumers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -15,10 +17,10 @@ IHostBuilder CreateHostBuilder(string[] args) =>
 
                 x.UsingRabbitMq((context, cfg) =>
                 {
-                    cfg.Host("rattlesnake-01.rmq.cloudamqp.com", 5671, "cswkixly", h =>
+                    cfg.Host("rattlesnake-01.rmq.cloudamqp.com", 5671, "alrbgpxt", h =>
                     {
-                        h.Username("cswkixly");
-                        h.Password("MHvokiAUUQ-30kep2zd6bxRMS8Dy6XSx");
+                        h.Username("alrbgpxt");
+                        h.Password("HurWX2E_jcjs3hhBjnFCZYwGQnB-689P");
                         h.UseSsl(s =>
                         {
                             s.Protocol = SslProtocols.Tls12;

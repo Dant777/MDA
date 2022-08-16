@@ -1,6 +1,6 @@
 ﻿namespace MDA.Restaraunt.Messages
 {
-    internal interface IKitchenReady
+    public interface IKitchenReady
     {
         public Guid OrderId { get; }
 

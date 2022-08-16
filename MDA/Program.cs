@@ -1,18 +1,19 @@
 ﻿using System.Diagnostics;
 using MDA.Restaraunt.Booking.Entities;
+using MDA.Restaraunt.Messages;
 
 
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-var rest = new Restaurant();
+var rest = new MDA.Restaraunt.Booking.Entities.Restaurant();
 while (true)
 {
     Messenger.PrintTxt("Привет! Забронировать столик/отменить бронь!" +
                       "\n\t1 - мы уведомим Вас по смс (асинхронно)" +
                       "\n\t2 - подождите на линии, мы Вас оповестим (синхронно)" +
                       "\n\t3 - мы уведомим Вас по смс об отмене брони (асинхронно)" +
-                      "\n\t4 - подождите на линии, мы Вас оповестим об отмене брони (синхронно)" +
-                      "\n\t5 - Иноформация о столиках", MsgColor.Normal);
+                      "\n\t4 - подождите на линии, мы Вас оповестим об отмене брони (синхронно)"
+                      , MsgColor.Normal);
 
 
     string removeInput = String.Empty;
@@ -43,9 +44,6 @@ while (true)
             tableNum = IsCorrectUserInput(removeInput);
             if(tableNum == -1) continue;
             rest.RemoveBookTable(tableNum);
-            break;
-        case 5:
-            rest.PrintTablesInfo();
             break;
         default:
             Messenger.PrintTxt("ОШИБКА: Введите, пожалуйста 1, 2, 3, 4", MsgColor.Error);

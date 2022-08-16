@@ -1,4 +1,7 @@
 ﻿using MassTransit;
+using MDA.Restaraunt.Messages;
+
+namespace MDA.Restaraunt.Kitchen;
 
 internal class Manager
 {
