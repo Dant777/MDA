@@ -1,15 +1,16 @@
 using MassTransit;
 using MDA.Restaraunt.Messages;
 using Microsoft.Extensions.Hosting;
+using MDA.Restaraunt.Booking.Entities;
 
 namespace MDA.Restaraunt.Booking
 {
     public class Worker : BackgroundService
     {
         private readonly IBus _bus;
-        private readonly MDA.Restaraunt.Booking.Entities.Restaurant _restaurant;
+        private readonly Restaurant _restaurant;
 
-        public Worker(IBus bus, MDA.Restaraunt.Booking.Entities.Restaurant restaurant)
+        public Worker(IBus bus, Restaurant restaurant)
         {
             _bus = bus;
             _restaurant = restaurant;
@@ -70,8 +71,10 @@ namespace MDA.Restaraunt.Booking
 
                 await Task.Delay(3000, stoppingToken);
 
-                await _bus.Publish(new TableBooked(NewId.NextGuid(), NewId.NextGuid(), result??false, userChoose),
-                    context => context.Durable = false, stoppingToken);
+                var dateTime = DateTime.Now;
+                await _bus.Publish(
+                    (IBookingRequest)new BookingRequest(NewId.NextGuid(), NewId.NextGuid(), null, dateTime),
+                    stoppingToken); ;
             }
         }
 

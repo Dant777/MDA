@@ -13,19 +13,37 @@ IHostBuilder CreateHostBuilder(string[] args) =>
         {
             services.AddMassTransit(x =>
             {
-                x.AddConsumer<KitchenTableBookedConsumer>();
-
-                x.UsingRabbitMq((context, cfg) =>
-                {
-                    cfg.Host("rattlesnake-01.rmq.cloudamqp.com", 5671, "alrbgpxt", h =>
+                x.AddConsumer<KitchenTableBookedConsumer>()
+                    .Endpoint(e =>
                     {
-                        h.Username("alrbgpxt");
-                        h.Password("HurWX2E_jcjs3hhBjnFCZYwGQnB-689P");
-                        h.UseSsl(s =>
-                        {
-                            s.Protocol = SslProtocols.Tls12;
-                        });
+                        e.Temporary = true;
+                    }); 
+                x.AddConsumer<KitchenBookingRequestFaultConsumer>()
+                    .Endpoint(e =>
+                    {
+                        e.Temporary = true;
                     });
+                x.AddDelayedMessageScheduler();
+                //x.UsingRabbitMq((context, cfg) =>
+                //{
+                //    cfg.Host("rattlesnake-01.rmq.cloudamqp.com", 5671, "alrbgpxt", h =>
+                //    {
+                //        h.Username("alrbgpxt");
+                //        h.Password("HurWX2E_jcjs3hhBjnFCZYwGQnB-689P");
+                //        h.UseSsl(s =>
+                //        {
+                //            s.Protocol = SslProtocols.Tls12;
+                //        });
+                //    });
+                //    cfg.UseDelayedMessageScheduler();
+                //    cfg.UseInMemoryOutbox();
+                //    cfg.ConfigureEndpoints(context);
+                //});
+                x.UsingInMemory((context, cfg) =>
+                {
+        
+                    cfg.UseDelayedMessageScheduler();
+                    cfg.UseInMemoryOutbox();
                     cfg.ConfigureEndpoints(context);
                 });
             });

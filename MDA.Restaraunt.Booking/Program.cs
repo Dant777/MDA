@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Authentication;
-using System.Text;
-using System.Threading.Tasks;
-using MassTransit;
+﻿using MassTransit;
+using MDA.Restaraunt.Booking.Consumers;
 using MDA.Restaraunt.Booking.Entities;
+using MDA.Restaraunt.Messages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Security.Authentication;
+using System.Text;
 
 namespace MDA.Restaraunt.Booking
 {
@@ -16,7 +14,7 @@ namespace MDA.Restaraunt.Booking
         public static void Main(string[] args)
         {
 
-            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            Console.OutputEncoding = Encoding.UTF8;
             CreateHostBuilder(args).Build().Run();
         }
 
@@ -26,23 +24,52 @@ namespace MDA.Restaraunt.Booking
                 {
                     services.AddMassTransit(x =>
                     {
-                        x.UsingRabbitMq((context, cfg) =>
-                        {
-                            cfg.Host("rattlesnake-01.rmq.cloudamqp.com", 5671, "alrbgpxt", h =>
+                        x.AddConsumer<BookingRequestConsumer>()
+                            .Endpoint(e =>
                             {
-                                h.Username("alrbgpxt");
-                                h.Password("HurWX2E_jcjs3hhBjnFCZYwGQnB-689P");
-                                h.UseSsl(s =>
-                                {
-                                    s.Protocol = SslProtocols.Tls12;
-                                });
+                                e.Temporary = true;
                             });
+
+                        x.AddConsumer<BookingRequestFaultConsumer>()
+                            .Endpoint(e =>
+                            {
+                                e.Temporary = true;
+                            });
+
+                        x.AddSagaStateMachine<RestaurantBookingSaga, RestaurantBooking>()
+                            .Endpoint(e => e.Temporary = true)
+                            .InMemoryRepository();
+
+                        x.AddDelayedMessageScheduler();
+
+                        //x.UsingRabbitMq((context, cfg) =>
+                        //{
+                        //    cfg.Host("rattlesnake-01.rmq.cloudamqp.com", 5671, "alrbgpxt", h =>
+                        //    {
+                        //        h.Username("alrbgpxt");
+                        //        h.Password("HurWX2E_jcjs3hhBjnFCZYwGQnB-689P");
+                        //        h.UseSsl(s =>
+                        //        {
+                        //            s.Protocol = SslProtocols.Tls12;
+                        //        });
+                        //    });
+
+                        //    cfg.UseDelayedMessageScheduler();
+                        //    cfg.UseInMemoryOutbox();
+                        //    cfg.ConfigureEndpoints(context);
+                        //});
+                        x.UsingInMemory((context, cfg) =>
+                        {
+
+                            cfg.UseDelayedMessageScheduler();
+                            cfg.UseInMemoryOutbox();
                             cfg.ConfigureEndpoints(context);
                         });
                     });
-                    services.AddMassTransitHostedService(true);
 
-                    services.AddTransient<Entities.Restaurant>();
+                    services.AddTransient<RestaurantBooking>();
+                    services.AddTransient<RestaurantBookingSaga>();
+                    services.AddTransient<Restaurant>();
 
                     services.AddHostedService<Worker>();
                 });
