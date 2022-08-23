@@ -40,7 +40,7 @@
         {
 
             Console.WriteLine(txt + "\n");
-            await Task.Delay(5000);
+            //await Task.Delay(5000);
             Console.ResetColor();
 
         }

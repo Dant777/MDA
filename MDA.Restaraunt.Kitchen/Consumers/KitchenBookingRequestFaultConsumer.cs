@@ -7,7 +7,7 @@ namespace MDA.Restaraunt.Kitchen.Consumers
     {
         public Task Consume(ConsumeContext<Fault<IBookingRequest>> context)
         {
-            
+            Console.WriteLine($"[OrderId {context.Message.Message.OrderId}] Отмена в зале");
             return Task.CompletedTask;
         }
     }

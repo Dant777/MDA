@@ -7,12 +7,12 @@ public interface IBookingExpire
 
 public class BookingExpire : IBookingExpire
 {
-    private readonly RestaurantBooking _instance;
 
-    public BookingExpire(RestaurantBooking instance)
+
+    public BookingExpire()
     {
-        _instance = instance;
+
     }
 
-    public Guid OrderId => _instance.OrderId;
+    public Guid OrderId { get; set; }
 }

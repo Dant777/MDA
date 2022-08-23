@@ -14,9 +14,10 @@ namespace MDA.Restaraunt.Kitchen.Consumers
 
         public async Task Consume(ConsumeContext<IBookingRequest> context)
         {
+            //throw new Exception($"Поломка на кухне! - {DateTime.Now}");
             Console.WriteLine($"[OrderId: {context.Message.OrderId} CreationDate: {context.Message.CreationDate}]");
             Console.WriteLine("Trying time: " + DateTime.Now);
-
+            
             await Task.Delay(5000);
 
             if (_manager.CheckKitchenReady(context.Message.OrderId, context.Message.PreOrder))

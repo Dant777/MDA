@@ -23,29 +23,32 @@ IHostBuilder CreateHostBuilder(string[] args) =>
                     {
                         e.Temporary = true;
                     });
-                x.AddDelayedMessageScheduler();
-                //x.UsingRabbitMq((context, cfg) =>
+                Uri schedulerEndpoint = new Uri("queue:scheduler");
+                x.AddMessageScheduler(schedulerEndpoint);
+
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    cfg.Host("rattlesnake-01.rmq.cloudamqp.com", 5671, "zynnruxw", h =>
+                    {
+                        h.Username("zynnruxw");
+                        h.Password("U-4FGwT3LH9rsTJdfTPlmDaZPX69bJbC");
+                        h.UseSsl(s =>
+                        {
+                            s.Protocol = SslProtocols.Tls12;
+                        });
+                    });
+                    cfg.UseMessageScheduler(schedulerEndpoint);
+                    cfg.UseInMemoryOutbox();
+                    cfg.ConfigureEndpoints(context);
+                });
+
+                //x.UsingInMemory((context, cfg) =>
                 //{
-                //    cfg.Host("rattlesnake-01.rmq.cloudamqp.com", 5671, "alrbgpxt", h =>
-                //    {
-                //        h.Username("alrbgpxt");
-                //        h.Password("HurWX2E_jcjs3hhBjnFCZYwGQnB-689P");
-                //        h.UseSsl(s =>
-                //        {
-                //            s.Protocol = SslProtocols.Tls12;
-                //        });
-                //    });
+
                 //    cfg.UseDelayedMessageScheduler();
                 //    cfg.UseInMemoryOutbox();
                 //    cfg.ConfigureEndpoints(context);
                 //});
-                x.UsingInMemory((context, cfg) =>
-                {
-        
-                    cfg.UseDelayedMessageScheduler();
-                    cfg.UseInMemoryOutbox();
-                    cfg.ConfigureEndpoints(context);
-                });
             });
 
             services.AddSingleton<Manager>();

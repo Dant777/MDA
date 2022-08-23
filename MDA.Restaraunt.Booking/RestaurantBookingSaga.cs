@@ -33,7 +33,7 @@ public sealed class RestaurantBookingSaga : MassTransitStateMachine<RestaurantBo
         Schedule(() => BookingExpired,
             x => x.ExpirationId, x =>
             {
-                x.Delay = TimeSpan.FromSeconds(5);
+                x.Delay = TimeSpan.FromSeconds(300);
                 x.Received = e => e.CorrelateById(context => context.Message.OrderId);
             });
 
@@ -47,8 +47,7 @@ public sealed class RestaurantBookingSaga : MassTransitStateMachine<RestaurantBo
                     Console.WriteLine("Saga: " + context.Data.CreationDate);
                 })
                 .Schedule(BookingExpired,
-                    context => new BookingExpire(context.Instance),
-                    context => TimeSpan.FromSeconds(1))
+                    context => context.Init<IBookingExpire>(new BookingExpire() { OrderId = context.Saga.CorrelationId }))
                 .TransitionTo(AwaitingBookingApproved)
         );
 
