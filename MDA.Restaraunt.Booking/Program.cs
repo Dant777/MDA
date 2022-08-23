@@ -59,13 +59,6 @@ namespace MDA.Restaraunt.Booking
                             cfg.ConfigureEndpoints(context);
                         });
 
-                        //x.UsingInMemory((context, cfg) =>
-                        //{
-
-                        //    cfg.UseDelayedMessageScheduler();
-                        //    cfg.UseInMemoryOutbox();
-                        //    cfg.ConfigureEndpoints(context);
-                        //});
                     });
 
                     services.AddTransient<RestaurantBooking>();

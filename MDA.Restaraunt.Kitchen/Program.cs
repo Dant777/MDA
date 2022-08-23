@@ -42,13 +42,6 @@ IHostBuilder CreateHostBuilder(string[] args) =>
                     cfg.ConfigureEndpoints(context);
                 });
 
-                //x.UsingInMemory((context, cfg) =>
-                //{
-
-                //    cfg.UseDelayedMessageScheduler();
-                //    cfg.UseInMemoryOutbox();
-                //    cfg.ConfigureEndpoints(context);
-                //});
             });
 
             services.AddSingleton<Manager>();

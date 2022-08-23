@@ -45,23 +45,6 @@ IHostBuilder CreateHostBuilder(string[] args) =>
                    cfg.ConfigureEndpoints(context);
                });
 
-               //x.UsingInMemory((context, cfg) =>
-               //{
-               //    cfg.UseMessageRetry(r =>
-               //    {
-               //        r.Exponential(5,
-               //            TimeSpan.FromSeconds(1),
-               //            TimeSpan.FromSeconds(100),
-               //            TimeSpan.FromSeconds(5));
-               //        r.Ignore<StackOverflowException>();
-               //        r.Ignore<ArgumentNullException>(x => x.Message.Contains("Consumer"));
-               //    });
-               //    cfg.UseDelayedMessageScheduler();
-               //    cfg.UseInMemoryOutbox();
-               //    cfg.ConfigureEndpoints(context);
-               //});
-
-
            });
            services.AddSingleton<Notifier>();
            services.AddMassTransitHostedService(true);
