@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MDA.Restaraunt.Booking\MDA.Restaraunt.Booking.csproj" />
+    <ProjectReference Include="..\MDA.Restaraunt.Messages\MDA.Restaraunt.Messages.csproj" />
   </ItemGroup>
 
 </Project>
