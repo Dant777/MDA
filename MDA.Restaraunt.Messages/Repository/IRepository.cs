@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 namespace MDA.Restaraunt.Messages.Repository
 {
 
-
     public interface IRepository<T> where T : class
     {
-        public void Add(T entity);
-        public void Update(T entity);
-        public void Delete(int id);
-
-        public IEnumerable<T> Get();
-        public T GetByid(int id);
+        public Task<bool> AddAsync(T entity);
+        public Task<bool> UpdateAsync(T entity);
+        public Task<bool> DeleteByIdAsync(int id);
+        public Task<bool> DeleteByOrderIdAsync(Guid orderId);
+        public Task<IEnumerable<T>> GetAllAsync();
+        public Task<T> GetByIdAsync(int id);
+        public Task<T> GetByOrderIdAsync(Guid orderId);
     }
 }
