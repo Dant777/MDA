@@ -14,7 +14,12 @@ namespace MDA.Restaraunt.Kitchen.Consumers
 
         public async Task Consume(ConsumeContext<IBookingRequest> context)
         {
-            //throw new Exception($"Поломка на кухне! - {DateTime.Now}");
+            var rnd = new Random().Next(1000, 10000);
+            if (rnd > 8000)
+            {
+                throw new Exception($"Поломка на кухне! - {DateTime.Now}");
+            }
+
             Console.WriteLine($"[OrderId: {context.Message.OrderId} CreationDate: {context.Message.CreationDate}]");
             Console.WriteLine("Trying time: " + DateTime.Now);
             

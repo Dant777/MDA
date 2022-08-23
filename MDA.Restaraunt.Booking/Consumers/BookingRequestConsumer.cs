@@ -16,7 +16,12 @@ namespace MDA.Restaraunt.Booking.Consumers
 
         public async Task Consume(ConsumeContext<IBookingRequest> context)
         {
-            throw new Exception("Ошибка при бронировании !!!!!!");
+            var rnd = new Random().Next(1000, 10000);
+            if (rnd > 8000)
+            {
+                throw new Exception("Ошибка при бронировании !!!!!!");
+            }
+            
             Console.WriteLine($"[OrderId: {context.Message.OrderId}]");
             var result = await _restaurant.BookFreeTableAsync(1);
 
