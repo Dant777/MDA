@@ -6,11 +6,11 @@ namespace MDA.Restaraunt.Messages.Repository;
 /// <summary>
 /// Класс репозитория
 /// </summary>
-public class BookingRequestRequestRepository : IBookingRequestRepository
+public class BookingRequestRepository : IBookingRequestRepository
 {
     private readonly AppDbContext _db;
 
-    public BookingRequestRequestRepository(AppDbContext db)
+    public BookingRequestRepository(AppDbContext db)
     {
         _db = db;
     }
@@ -21,18 +21,17 @@ public class BookingRequestRequestRepository : IBookingRequestRepository
     /// <param name="entity">Объект</param>
     public async Task<bool> AddAsync(BookingRequestModel entity)
     {
-        using (_db)
+
+        try
         {
-            try
-            {
-                await _db.BookingRequestModels.AddAsync(entity);
-                return await _db.SaveChangesAsync() >= 1;
-            }
-            catch
-            {
-                return false;
-            }
+            await _db.BookingRequestModels.AddAsync(entity);
+            return await _db.SaveChangesAsync() >= 1;
         }
+        catch
+        {
+            return false;
+        }
+
     }
 
     /// <summary>
@@ -41,18 +40,17 @@ public class BookingRequestRequestRepository : IBookingRequestRepository
     /// <param name="entity">Объект</param>
     public async Task<bool> UpdateAsync(BookingRequestModel entity)
     {
-        using (_db)
+
+        try
         {
-            try
-            {
-                _db.BookingRequestModels.Update(entity);
-                return await _db.SaveChangesAsync() >= 1;
-            }
-            catch
-            {
-                return false;
-            }
+            _db.BookingRequestModels.Update(entity);
+            return await _db.SaveChangesAsync() >= 1;
         }
+        catch
+        {
+            return false;
+        }
+
     }
 
 
@@ -62,20 +60,19 @@ public class BookingRequestRequestRepository : IBookingRequestRepository
     /// <param name="id">Id</param>
     public async Task<bool> DeleteByIdAsync(int id)
     {
-        using (_db)
+
+        try
         {
-            try
-            {
-                var item = await GetByIdAsync(id);
-                _db.BookingRequestModels.Remove(item);
-                return await _db.SaveChangesAsync() >= 1;
-            }
-            catch
-            {
-                return false;
-            }
+            var item = await GetByIdAsync(id);
+            _db.BookingRequestModels.Remove(item);
+            return await _db.SaveChangesAsync() >= 1;
         }
-            
+        catch
+        {
+            return false;
+        }
+
+
     }
     /// <summary>
     /// Удаление из базы данных
@@ -83,19 +80,18 @@ public class BookingRequestRequestRepository : IBookingRequestRepository
     /// <param name="orderId">Id</param>
     public async Task<bool> DeleteByOrderIdAsync(Guid orderId)
     {
-        using (_db)
+
+        try
         {
-            try
-            {
-                var item = await GetByOrderIdAsync(orderId);
-                _db.BookingRequestModels.Remove(item);
-                return await _db.SaveChangesAsync() >= 1;
-            }
-            catch
-            {
-                return false;
-            }
+            var item = await GetByOrderIdAsync(orderId);
+            _db.BookingRequestModels.Remove(item);
+            return await _db.SaveChangesAsync() >= 1;
         }
+        catch
+        {
+            return false;
+        }
+
     }
 
     /// <summary>
@@ -103,10 +99,9 @@ public class BookingRequestRequestRepository : IBookingRequestRepository
     /// </summary>
     public async Task<IEnumerable<BookingRequestModel>> GetAllAsync()
     {
-        using (_db)
-        {
-            return await _db.BookingRequestModels.ToListAsync();
-        }
+
+        return await _db.BookingRequestModels.ToListAsync();
+
     }
 
     /// <summary>
@@ -115,11 +110,10 @@ public class BookingRequestRequestRepository : IBookingRequestRepository
     /// <param name="id">Id</param>
     public async Task<BookingRequestModel> GetByIdAsync(int id)
     {
-        using (_db)
-        {
-            return await _db.BookingRequestModels.
-                FirstOrDefaultAsync(p => p.BookingRequestId == id);
-        }
+
+        return await _db.BookingRequestModels.
+            FirstOrDefaultAsync(p => p.BookingRequestId == id);
+
     }
 
     /// <summary>
@@ -128,10 +122,9 @@ public class BookingRequestRequestRepository : IBookingRequestRepository
     /// <param name="orderId">Id</param>
     public async Task<BookingRequestModel> GetByOrderIdAsync(Guid orderId)
     {
-        using (_db)
-        {
-            return await _db.BookingRequestModels.
-                FirstOrDefaultAsync(p => p.OrderId == orderId);
-        }
+
+        return await _db.BookingRequestModels.
+            FirstOrDefaultAsync(p => p.OrderId == orderId);
+
     }
 }

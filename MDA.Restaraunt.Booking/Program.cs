@@ -6,6 +6,11 @@ using MDA.Restaraunt.Messages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Text;
+using MDA.Restaraunt.Messages.Repository;
+using MDA.Restaraunt.Booking.Schedules;
+using MDA.Restaraunt.Messages.DbData;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace MDA.Restaraunt.Booking
 {
@@ -22,6 +27,7 @@ namespace MDA.Restaraunt.Booking
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
+                    services.AddDbContext<AppDbContext>();
                     services.AddMassTransit(x =>
                     {
                         x.AddConsumer<BookingRequestConsumer>()
@@ -55,6 +61,7 @@ namespace MDA.Restaraunt.Booking
                             });
 
                             cfg.UseMessageScheduler(schedulerEndpoint);
+
                             cfg.UseInMemoryOutbox();
                             cfg.ConfigureEndpoints(context);
                         });
@@ -65,7 +72,8 @@ namespace MDA.Restaraunt.Booking
                     services.AddTransient<RestaurantBookingSaga>();
                     services.AddTransient<Restaurant>();
                     services.AddTransient<BookingExpire>();
-
+                    services.AddTransient<DbDeleteSchedule>();
+                    services.AddSingleton<IBookingRequestRepository, BookingRequestRepository>();
                     services.AddHostedService<Worker>();
                 });
     }

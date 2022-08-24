@@ -1,13 +1,17 @@
 ﻿using MassTransit;
-using MDA.Restaraunt.Booking.Consumers;
+using MDA.Restaraunt.Booking.Schedules;
 using MDA.Restaraunt.Messages;
+using MDA.Restaraunt.Messages.Repository;
 
 namespace MDA.Restaraunt.Booking;
 
 public sealed class RestaurantBookingSaga : MassTransitStateMachine<RestaurantBooking>
 {
-    public RestaurantBookingSaga()
+    private readonly IBookingRequestRepository _bookingRequestRepository;
+    public RestaurantBookingSaga(IBookingRequestRepository bookingRequestRepository)
     {
+        _bookingRequestRepository = bookingRequestRepository;
+
         InstanceState(x => x.CurrentState);
 
         Event(() => BookingRequested,
@@ -33,7 +37,13 @@ public sealed class RestaurantBookingSaga : MassTransitStateMachine<RestaurantBo
         Schedule(() => BookingExpired,
             x => x.ExpirationId, x =>
             {
-                x.Delay = TimeSpan.FromSeconds(300);
+                x.Delay = TimeSpan.FromSeconds(10);
+                x.Received = e => e.CorrelateById(context => context.Message.OrderId);
+            });
+        Schedule(() => DBDelete,
+            x => x.BookingDbExpirationId, x =>
+            {
+                x.Delay = TimeSpan.FromSeconds(5);
                 x.Received = e => e.CorrelateById(context => context.Message.OrderId);
             });
 
@@ -48,6 +58,9 @@ public sealed class RestaurantBookingSaga : MassTransitStateMachine<RestaurantBo
                 })
                 .Schedule(BookingExpired,
                     context => context.Init<IBookingExpire>(new BookingExpire() { OrderId = context.Saga.CorrelationId }))
+                .Schedule(DBDelete,
+                    context => context.Init<IDBDeleteSchedule>(new DbDeleteSchedule() { OrderId = context.Instance.OrderId }),
+                    context => TimeSpan.FromSeconds(1))
                 .TransitionTo(AwaitingBookingApproved)
         );
 
@@ -71,7 +84,16 @@ public sealed class RestaurantBookingSaga : MassTransitStateMachine<RestaurantBo
 
             When(BookingExpired.Received)
                 .Then(context => Console.WriteLine($"Отмена заказа {context.Instance.OrderId}"))
-                .Finalize()
+                .Finalize(),
+            When(DBDelete.AnyReceived)
+                .Then(context =>
+                {
+                    var orderId = context.Instance.OrderId;
+                    Console.WriteLine($"Удаление из хранилища сообщения - {orderId}");
+                    _bookingRequestRepository.DeleteByOrderIdAsync(orderId);
+
+                })
+
         );
 
         SetCompletedWhenFinalized();
@@ -84,5 +106,6 @@ public sealed class RestaurantBookingSaga : MassTransitStateMachine<RestaurantBo
     public Event<Fault<IBookingRequest>> BookingRequestFault { get; private set; }
 
     public Schedule<RestaurantBooking, IBookingExpire> BookingExpired { get; private set; }
+    public Schedule<RestaurantBooking, IDBDeleteSchedule> DBDelete { get; private set; }
     public Event BookingApproved { get; private set; }
 }

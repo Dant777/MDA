@@ -1,4 +1,4 @@
-﻿namespace MDA.Restaraunt.Booking.Consumers;
+﻿namespace MDA.Restaraunt.Booking.Schedules;
 
 public interface IBookingExpire
 {

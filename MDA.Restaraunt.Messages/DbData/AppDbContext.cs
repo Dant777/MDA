@@ -11,9 +11,16 @@ namespace MDA.Restaraunt.Messages.DbData
     public class AppDbContext : DbContext
     {
         public DbSet<BookingRequestModel> BookingRequestModels { get; set; }
+
+        public AppDbContext(DbContextOptions options)
+        : base(options)
+        {
+            
+        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite($"Data Source=./DbData/AppData.db");
+            var path = @"D:\YandexDisk\Обучение\GeekBrain\C#_U_MDA\MDA\MDA.Restaraunt.Messages\DbData\AppData.db";
+            optionsBuilder.UseSqlite($"Data Source={path}");
         }
     }
 }

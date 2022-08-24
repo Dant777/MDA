@@ -38,6 +38,7 @@ IHostBuilder CreateHostBuilder(string[] args) =>
                         });
                     });
                     cfg.UseMessageScheduler(schedulerEndpoint);
+
                     cfg.UseInMemoryOutbox();
                     cfg.ConfigureEndpoints(context);
                 });
