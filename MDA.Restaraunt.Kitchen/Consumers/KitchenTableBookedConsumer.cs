@@ -1,27 +1,25 @@
 ﻿using MassTransit;
 using MDA.Restaraunt.Messages;
+using Microsoft.Extensions.Logging;
 
 namespace MDA.Restaraunt.Kitchen.Consumers
 {
     internal class KitchenTableBookedConsumer : IConsumer<IBookingRequest>
     {
         private readonly Manager _manager;
-
-        public KitchenTableBookedConsumer(Manager manager)
+        private readonly ILogger _logger;
+        public KitchenTableBookedConsumer(Manager manager, ILogger<KitchenTableBookedConsumer> logger)
         {
             _manager = manager;
+            _logger = logger;
         }
 
         public async Task Consume(ConsumeContext<IBookingRequest> context)
         {
-            //var rnd = new Random().Next(1000, 10000);
-            //if (rnd > 8000)
-            //{
-            //    throw new Exception($"Поломка на кухне! - {DateTime.Now}");
-            //}
+            _logger.Log(LogLevel.Information, $"[OrderId: {context.Message.OrderId} CreationDate: {context.Message.CreationDate}]");
+            _logger.Log(LogLevel.Information, "Trying time: " + DateTime.Now);
 
-            Console.WriteLine($"[OrderId: {context.Message.OrderId} CreationDate: {context.Message.CreationDate}]");
-            Console.WriteLine("Trying time: " + DateTime.Now);
+            Console.WriteLine();
             
             await Task.Delay(5000);
 

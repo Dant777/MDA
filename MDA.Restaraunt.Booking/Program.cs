@@ -6,9 +6,11 @@ using MDA.Restaraunt.Messages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Text;
+using MassTransit.Audit;
 using MDA.Restaraunt.Messages.Repository;
 using MDA.Restaraunt.Booking.Schedules;
 using MDA.Restaraunt.Messages.DbData;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -25,56 +27,6 @@ namespace MDA.Restaraunt.Booking
 
         private static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .ConfigureServices((hostContext, services) =>
-                {
-                    services.AddDbContext<AppDbContext>();
-                    services.AddMassTransit(x =>
-                    {
-                        x.AddConsumer<BookingRequestConsumer>()
-                            .Endpoint(e =>
-                            {
-                                e.Temporary = true;
-                            });
-
-                        x.AddConsumer<BookingRequestFaultConsumer>()
-                            .Endpoint(e =>
-                            {
-                                e.Temporary = true;
-                            });
-
-                        x.AddSagaStateMachine<RestaurantBookingSaga, RestaurantBooking>()
-                            .Endpoint(e => e.Temporary = true)
-                            .InMemoryRepository();
-                        Uri schedulerEndpoint = new Uri("queue:scheduler");
-                        x.AddMessageScheduler(schedulerEndpoint);
-
-                        x.UsingRabbitMq((context, cfg) =>
-                        {
-                            cfg.Host("rattlesnake-01.rmq.cloudamqp.com", 5671, "zynnruxw", h =>
-                            {
-                                h.Username("zynnruxw");
-                                h.Password("U-4FGwT3LH9rsTJdfTPlmDaZPX69bJbC");
-                                h.UseSsl(s =>
-                                {
-                                    s.Protocol = SslProtocols.Tls12;
-                                });
-                            });
-
-                            cfg.UseMessageScheduler(schedulerEndpoint);
-
-                            cfg.UseInMemoryOutbox();
-                            cfg.ConfigureEndpoints(context);
-                        });
-
-                    });
-
-                    services.AddTransient<RestaurantBooking>();
-                    services.AddTransient<RestaurantBookingSaga>();
-                    services.AddTransient<Restaurant>();
-                    services.AddTransient<BookingExpire>();
-                    services.AddTransient<DbDeleteSchedule>();
-                    services.AddSingleton<IBookingRequestRepository, BookingRequestRepository>();
-                    services.AddHostedService<Worker>();
-                });
+                .ConfigureWebHostDefaults(webBuilder => { webBuilder.UseStartup<Startup>(); });
     }
 }

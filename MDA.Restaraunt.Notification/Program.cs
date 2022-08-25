@@ -1,6 +1,8 @@
 ﻿using MassTransit;
+using MassTransit.Audit;
 using MDA.Restaraunt.Notification;
 using MDA.Restaraunt.Notification.Consumers;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Security.Authentication;
@@ -8,12 +10,13 @@ using System.Security.Authentication;
 
 CreateHostBuilder(args).Build().Run();
 
-
-
 IHostBuilder CreateHostBuilder(string[] args) =>
    Host.CreateDefaultBuilder(args)
        .ConfigureServices((hostContext, services) =>
        {
+           services.AddSingleton<IMessageAuditStore, AuditStore>();
+           var serviceProvider = services.BuildServiceProvider();
+           var auditStore = serviceProvider.GetService<IMessageAuditStore>();
 
            services.AddMassTransit(x =>
            {
@@ -30,7 +33,7 @@ IHostBuilder CreateHostBuilder(string[] args) =>
                            s.Protocol = SslProtocols.Tls12;
                        });
                    });
-
+                   cfg.UsePrometheusMetrics(serviceName: "booking_service");
                    cfg.UseMessageRetry(r =>
                    {
                        r.Exponential(5,
@@ -40,12 +43,14 @@ IHostBuilder CreateHostBuilder(string[] args) =>
                        r.Ignore<StackOverflowException>();
                        r.Ignore<ArgumentNullException>(x => x.Message.Contains("Consumer"));
                    });
-
+                   cfg.UsePrometheusMetrics(serviceName: "booking_service");
 
                    cfg.ConfigureEndpoints(context);
+                   cfg.ConnectSendAuditObservers(auditStore);
+                   cfg.ConnectConsumeAuditObserver(auditStore);
                });
 
            });
+
            services.AddSingleton<Notifier>();
-           services.AddMassTransitHostedService(true);
        });

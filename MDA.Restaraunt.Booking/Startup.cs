@@ -1,34 +1,46 @@
-﻿using MassTransit;
+﻿using System.Security.Authentication;
+using MassTransit;
 using MassTransit.Audit;
-using MDA.Restaraunt.Kitchen;
-using MDA.Restaraunt.Kitchen.Consumers;
+using MDA.Restaraunt.Booking.Consumers;
+using MDA.Restaraunt.Booking.Entities;
+using MDA.Restaraunt.Booking.Schedules;
+using MDA.Restaraunt.Messages;
+using MDA.Restaraunt.Messages.DbData;
+using MDA.Restaraunt.Messages.Repository;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using System.Security.Authentication;
+using Prometheus;
 
-CreateHostBuilder(args).Build().Run();
-
-IHostBuilder CreateHostBuilder(string[] args) =>
-    Host.CreateDefaultBuilder(args)
-        .ConfigureServices((hostContext, services) =>
+namespace MDA.Restaraunt.Booking
+{
+    public class Startup
+    {
+        public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers();
+            services.AddDbContext<AppDbContext>();
             services.AddSingleton<IMessageAuditStore, AuditStore>();
 
             var serviceProvider = services.BuildServiceProvider();
             var auditStore = serviceProvider.GetService<IMessageAuditStore>();
             services.AddMassTransit(x =>
             {
-                x.AddConsumer<KitchenTableBookedConsumer>()
+                x.AddConsumer<BookingRequestConsumer>()
                     .Endpoint(e =>
                     {
                         e.Temporary = true;
                     });
-                x.AddConsumer<KitchenBookingRequestFaultConsumer>()
+
+                x.AddConsumer<BookingRequestFaultConsumer>()
                     .Endpoint(e =>
                     {
                         e.Temporary = true;
                     });
+
+                x.AddSagaStateMachine<RestaurantBookingSaga, RestaurantBooking>()
+                    .Endpoint(e => e.Temporary = true)
+                    .InMemoryRepository();
                 Uri schedulerEndpoint = new Uri("queue:scheduler");
                 x.AddMessageScheduler(schedulerEndpoint);
 
@@ -55,5 +67,24 @@ IHostBuilder CreateHostBuilder(string[] args) =>
 
             });
 
-            services.AddSingleton<Manager>();
-        });
+            services.AddTransient<RestaurantBooking>();
+            services.AddTransient<RestaurantBookingSaga>();
+            services.AddTransient<Restaurant>();
+            services.AddTransient<BookingExpire>();
+            services.AddTransient<DbDeleteSchedule>();
+            services.AddSingleton<IBookingRequestRepository, BookingRequestRepository>();
+            services.AddHostedService<Worker>();
+        }
+
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            app.UseRouting();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapMetrics();
+                endpoints.MapControllers();
+            });
+        }
+    }
+}

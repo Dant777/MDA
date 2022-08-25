@@ -2,6 +2,7 @@
 using MDA.Restaraunt.Booking.Entities;
 using MDA.Restaraunt.Messages;
 using MDA.Restaraunt.Messages.Repository;
+using Microsoft.Extensions.Logging;
 
 namespace MDA.Restaraunt.Booking.Consumers
 {
@@ -10,19 +11,17 @@ namespace MDA.Restaraunt.Booking.Consumers
 
         private readonly Restaurant _restaurant;
         private readonly IBookingRequestRepository _bookingRequestRepository;
-        public BookingRequestConsumer(Restaurant restaurant, IBookingRequestRepository bookingRequestRepository)
+        private readonly ILogger _logger;
+
+        public BookingRequestConsumer(Restaurant restaurant, IBookingRequestRepository bookingRequestRepository, ILogger<BookingRequestConsumer> logger)
         {
             _restaurant = restaurant;
             _bookingRequestRepository = bookingRequestRepository;
+            _logger = logger;
         }
 
         public async Task Consume(ConsumeContext<IBookingRequest> context)
         {
-            //var rnd = new Random().Next(1000, 10000);
-            //if (rnd > 8000)
-            //{
-            //    throw new Exception("Ошибка при бронировании !!!!!!");
-            //}
 
             BookingRequestModel model = await _bookingRequestRepository.GetByOrderIdAsync(context.Message.OrderId);
             if (model != null)
@@ -37,11 +36,11 @@ namespace MDA.Restaraunt.Booking.Consumers
                 CreationDate = context.Message.CreationDate
             };
 
-            Console.WriteLine($"[OrderId: {context.Message.OrderId}]");
+            _logger.Log(LogLevel.Information, $"[OrderId: {context.Message.OrderId}]");
             var isAdd = await _bookingRequestRepository.AddAsync(requestModel);
             if (!isAdd)
             {
-                Console.WriteLine("Копирование в DB не произведено");
+                _logger.Log(LogLevel.Debug, "Копирование в DB не произведено");
             }
             var result = await _restaurant.BookFreeTableAsync(1);
 
